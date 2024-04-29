@@ -12,7 +12,7 @@ end
 --- Visualize the selected dataframe.
 function M.visualize_pandas_df()
     dap.repl.execute("from visidata import vd")
-    local selected_item = get_visual_selection()
+    local selected_item = get_visual_selection()[1]
     dap.repl.execute("print(" .. selected_item .. ")")
     dap.repl.execute("print(" .. selected_item .. ".dtypes)")
     dap.repl.execute("vd.view_pandas(" .. selected_item .. ") ")
