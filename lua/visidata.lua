@@ -6,6 +6,10 @@ local dap = require("dap")
 local function get_visual_selection()
     local _, line_start, col_start = unpack(vim.fn.getpos("v"))
     local _, line_end, col_end = unpack(vim.fn.getpos("."))
+    if line_start > line_end or (line_start == line_end and col_start > col_end) then
+        line_start, line_end = line_end, line_start
+        col_start, col_end = col_end, col_start
+    end
     local selection = vim.api.nvim_buf_get_text(0, line_start - 1, col_start - 1, line_end - 1, col_end, {})
     return selection
 end
@@ -13,9 +17,15 @@ end
 function M.visualize_pandas_df()
     dap.repl.execute("from visidata import vd")
     local selected_item = get_visual_selection()[1]
-    dap.repl.execute("print(" .. selected_item .. ")")
-    dap.repl.execute("print(" .. selected_item .. ".dtypes)")
-    dap.repl.execute("vd.view_pandas(" .. selected_item .. ") ")
+    local code_to_be_executed = {
+        "try:",
+        "   print(" .. selected_item .. ")",
+        "   print(" .. selected_item .. ".dtypes)",
+        "   vd.view_pandas(" .. selected_item .. ")",
+        "except Exception as e:",
+        "   print(selected_item)",
+    }
+    dap.repl.execute(table.concat(code_to_be_executed, "\n"))
 end
 
 return M
