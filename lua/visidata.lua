@@ -28,7 +28,7 @@ function M.visualize_pandas_df()
         "   else:",
         "       print(" .. selected_item .. ")",
         "except Exception as e:",
-        "   print(f({type(" .. selected_item .. ") does not implement __str__ method.}), e)",
+        "   print(f'{type(" .. selected_item .. ")} does not implement __str__ method'), e)",
     }
     dap.repl.execute(table.concat(code_to_be_executed, "\n"))
 end
