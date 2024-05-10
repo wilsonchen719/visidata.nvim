@@ -20,13 +20,15 @@ function M.visualize_pandas_df()
         "from visidata import vd",
         "try:",
         "   if isinstance(" .. selected_item .. ", pd.DataFrame):",
-        "       print(" .. selected_item .. ".head(5))",
+        "       print(" .. selected_item .. ".head(10))",
         "       print(" .. selected_item .. ".dtypes)",
         "       read_df = input('Do you want to read the dataframe in visidata? (y/n): ')",
         "       if read_df.upper() == 'Y':",
         "           vd.view_pandas(" .. selected_item .. ")",
+        "   else:",
+        "       print(" .. selected_item .. ")",
         "except Exception as e:",
-        "   print(" .. selected_item .. ")",
+        "   print(f({type(" .. selected_item .. ") doesn't implement __str__ method.}), e)",
     }
     dap.repl.execute(table.concat(code_to_be_executed, "\n"))
 end
