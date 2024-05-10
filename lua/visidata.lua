@@ -15,15 +15,18 @@ local function get_visual_selection()
 end
 --- Visualize the selected dataframe.
 function M.visualize_pandas_df()
-    dap.repl.execute("from visidata import vd")
     local selected_item = get_visual_selection()[1]
     local code_to_be_executed = {
+        "from visidata import vd",
         "try:",
-        "   print(" .. selected_item .. ")",
-        "   print(" .. selected_item .. ".dtypes)",
-        "   vd.view_pandas(" .. selected_item .. ")",
+        "   if isinstance(" .. selected_item .. ", pd.DataFrame):",
+        "       print(" .. selected_item .. ".head(5))",
+        "       print(" .. selected_item .. ".dtypes)",
+        "       read_df = input('Do you want to read the dataframe in visidata? (y/n): ')",
+        "       if read_df.upper() == 'Y':",
+        "           vd.view_pandas(" .. selected_item .. ")",
         "except Exception as e:",
-        "   print(selected_item)",
+        "   print(" .. selected_item .. ")",
     }
     dap.repl.execute(table.concat(code_to_be_executed, "\n"))
 end
